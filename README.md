@@ -47,14 +47,41 @@ terraform apply
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| bucket\_name | The name of the bucket to create | `string` | n/a | yes |
-| project\_id | The project ID to deploy to | `string` | n/a | yes |
+| argument | Arguments passed to the ENTRYPOINT command, include these only if image entrypoint needs arguments | `list(string)` | `[]` | no |
+| billing\_account | The billing account id associated with the project, e.g. XXXXXX-YYYYYY-ZZZZZZ | `string` | n/a | yes |
+| certificate\_mode | The mode of the certificate (NONE or AUTOMATIC) | `string` | `"NONE"` | no |
+| container\_command | Leave blank to use the ENTRYPOINT command defined in the container image, include these only if image entrypoint should be overwritten | `list(string)` | `[]` | no |
+| container\_concurrency | Concurrent request limits to the service | `number` | `null` | no |
+| domain\_map\_annotations | Annotations to the domain map | `map(string)` | `{}` | no |
+| domain\_map\_labels | A set of key/value label pairs to assign to the Domain mapping | `map(string)` | `{}` | no |
+| env\_secret\_vars | [Beta] Environment variables (Secret Manager) | <pre>list(object({<br>    name = string<br>    value_from = set(object({<br>      secret_key_ref = map(string)<br>    }))<br>  }))</pre> | `[]` | no |
+| env\_vars | Environment variables (cleartext) | <pre>list(object({<br>    value = string<br>    name  = string<br>  }))</pre> | `[]` | no |
+| environment | Environment tag to help identify the entire deployment | `string` | n/a | yes |
+| folder\_id | The folder to deploy project in | `string` | n/a | yes |
+| force\_override | Option to force override existing mapping | `bool` | `false` | no |
+| generate\_revision\_name | Option to enable revision name generation | `bool` | `true` | no |
+| image | GCR hosted image URL to deploy | `string` | `"us-docker.pkg.dev/cloudrun/container/hello"` | no |
+| limits | Resource limits to the container | `map(string)` | `null` | no |
+| members | Users/SAs to be given invoker access to the service | `list(string)` | `[]` | no |
+| org\_id | The numeric organization id | `string` | n/a | yes |
+| ports | Port which the container listens to (http1 or h2c) | <pre>object({<br>    name = string<br>    port = number<br>  })</pre> | <pre>{<br>  "name": "http1",<br>  "port": 8080<br>}</pre> | no |
+| project\_name | Prefix of Google Project name | `string` | `"prj"` | no |
+| region | The GCP region to create and test resources in | `string` | `"us-central1"` | no |
+| requests | Resource requests to the container | `map(string)` | `{}` | no |
+| service\_annotations | Annotations to the service. Acceptable values all, internal, internal-and-cloud-load-balancing | `map(string)` | <pre>{<br>  "run.googleapis.com/ingress": "internal"<br>}</pre> | no |
+| service\_labels | A set of key/value label pairs to assign to the service | `map(string)` | `{}` | no |
+| template\_annotations | Annotations to the container metadata including VPC Connector and SQL. See [more details](https://cloud.google.com/run/docs/reference/rpc/google.cloud.run.v1#revisiontemplate) | `map(string)` | <pre>{<br>  "autoscaling.knative.dev/maxScale": 3,<br>  "autoscaling.knative.dev/minScale": 2,<br>  "generated-by": "terraform",<br>  "run.googleapis.com/client-name": "terraform"<br>}</pre> | no |
+| template\_labels | A set of key/value label pairs to assign to the container metadata | `map(string)` | `{}` | no |
+| timeout\_seconds | Timeout for each request | `number` | `120` | no |
+| traffic\_split | Managing traffic routing to the service | <pre>list(object({<br>    latest_revision = bool<br>    percent         = number<br>    revision_name   = string<br>    tag             = string<br>  }))</pre> | <pre>[<br>  {<br>    "latest_revision": true,<br>    "percent": 100,<br>    "revision_name": "v1-0-0",<br>    "tag": null<br>  }<br>]</pre> | no |
+| verified\_domain\_name | List of Custom Domain Name | `list(string)` | `[]` | no |
+| volume\_mounts | [Beta] Volume Mounts to be attached to the container (when using secret) | <pre>list(object({<br>    mount_path = string<br>    name       = string<br>  }))</pre> | `[]` | no |
+| volumes | [Beta] Volumes needed for environment variables (when using secret) | <pre>list(object({<br>    name = string<br>    secret = set(object({<br>      secret_name = string<br>      items       = map(string)<br>    }))<br>  }))</pre> | `[]` | no |
+| zone | The GCP zone to create the instance in | `string` | `"us-central1-a"` | no |
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| bucket\_name | Name of the bucket |
+No output.
 
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
@@ -89,9 +116,10 @@ resources of this module:
 
 - iam.googleapis.com
 - compute.googleapis.com
-- aiplatform.googleapis.com
 - storage.googleapis.com
 - run.googleapis.com
+- vpcaccess.googleapis.com
+- secretmanager.googleapis.com
 
 ## Contributing
 

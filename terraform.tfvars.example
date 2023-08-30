@@ -1,0 +1,4 @@
+org_id = "123456789"
+billing_account = "123456-123456-123456"
+environment     = "prompt"
+folder_id       = "123456"
