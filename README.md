@@ -41,7 +41,7 @@ mv terraform.tfvars.template terraform.tfvars
 terraform init
 terraform plan
 terraform apply
-
+```
 <!-- BEGINNING OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 ## Inputs
 
