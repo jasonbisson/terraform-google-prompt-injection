@@ -1,4 +1,28 @@
 org_id = "123456789"
 billing_account = "123456-123456-123456"
-environment     = "prompt"
+environment     = "vertex"
 folder_id       = "123456"
+members         = ["user:your_id@example.co"]
+
+env_vars = [
+  {
+    name  = "my-name-1"
+    value = "my-value-1"
+  },
+  {
+    name  = "my-name-2"
+    value = "my-value-2"
+  }
+]
+
+env_secret_vars = [
+  {
+    name = "Your application secert variable name"
+    value_from = [{
+      secret_key_ref = {
+        name = "Your Google secret name"
+        key  = "Your Google secret version number"
+      }
+    }]
+  }
+]
