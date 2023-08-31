@@ -32,7 +32,7 @@ variable "billing_account" {
 variable "project_name" {
   description = "Prefix of Google Project name"
   type        = string
-  default = "prj"
+  default     = "prj"
 }
 
 variable "environment" {
@@ -75,7 +75,7 @@ variable "service_annotations" {
 variable "image" {
   description = "GCR hosted image URL to deploy"
   type        = string
-  default = "us-docker.pkg.dev/cloudrun/container/hello"
+  default     = "us-docker.pkg.dev/cloudrun/container/hello"
 }
 
 variable "argument" {
@@ -240,4 +240,10 @@ variable "members" {
   type        = list(string)
   description = "Users/SAs to be given invoker access to the service"
   default     = []
+}
+
+variable "machine_cpu_count" {
+  type        = string
+  description = "cpu count must be one of [2 4 8 16 32 64]"
+  default     = 2
 }
